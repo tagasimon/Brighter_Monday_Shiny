@@ -1,0 +1,13 @@
+name: brighter_monday
+title: brighter_monday
+username:
+account: simonsayz
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2983021
+bundleId: 3722404
+url: https://simonsayz.shinyapps.io/brighter_monday/
+when: 1602282823.95395
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: scrape_bm.R

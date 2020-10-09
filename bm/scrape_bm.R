@@ -67,7 +67,7 @@ jobs_df_final <- jobs_df %>%
         # head(5) %>%  ## -
         mutate(description = map(links, get_job_text)) %>%
         mutate(industry = map(links, get_indu)) %>%
-        mutate(job_type = map(links, get_job_type)) %>%
-        unnest(c(description,industry,job_type))
+        mutate(job_type = map(links, get_job_type))
+jobs_df_final <- jobs_df_final %>% unnest(c(description,industry,job_type))
 
 write_csv(jobs_df_final,"df2.csv")
