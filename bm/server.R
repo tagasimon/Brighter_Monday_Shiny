@@ -60,36 +60,11 @@ shinyServer(function(input, output) {
                                 }, " Industry")
                         )
         })
-        
-        output$n_grams_plot <-  renderPlot({
-                b_grams <- filtered_ds() %>%
-                        unnest_tokens(bigram,
-                                      description,
-                                      token = "ngrams",
-                                      n = 2) %>%
-                        count(bigram, sort = T)
-                
-                
-                b_grams_count <- b_grams %>%
-                        separate(bigram, c("word1", "word2"), sep = " ") %>%
-                        filter(!word1 %in% stop_words$word) %>%
-                        filter(!word2 %in% stop_words$word) %>%
-                        # filter(!is.na(word1)) %>%
-                        # filter(!is.na(word2)) %>%
-                        unite(bigram, word1, word2, sep = " ") %>%
-                        # head(10) %>%
-                        mutate(bigram = fct_reorder(bigram, n)) %>%
-                        head(10) %>%
-                        ggplot(aes(bigram, n)) +
-                        geom_col() +
-                        coord_flip()
-                b_grams_count
-                
-        })
+
         output$download_csv <- downloadHandler(
                 filename = "brighter_set.csv", 
                 content = function(file){
-                        write.csv(filt_data(), file)
+                        write.csv(filtered_ds(), file)
                 }
         )
 })
