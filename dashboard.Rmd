@@ -1,0 +1,97 @@
+---
+title: "Make Your Monday Even Brighter??"
+output: 
+  flexdashboard::flex_dashboard:
+    social: ["menu"]
+    orientation: rows
+    vertical_layout: scroll
+    navbar:
+      - { title: "About Me", href: "https://simonsayz.xyz", align: right }
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(tidytext)
+library(glue)
+```
+
+```{r}
+p <- getwd()
+df <- read_csv(paste(p, "/df2.csv", sep = ""))
+# knitr::kable(head(df, 20))
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Available Jobs
+
+```{r}
+jobs_unique <- max(df$id)
+valueBox(jobs_unique, icon = "fa-user-md", color = "success")
+```
+
+###  Unique Industries 
+
+```{r}
+num_ind <- df %>% count(industry) %>% nrow()
+valueBox(num_ind, icon = "fa-industry")
+```
+
+### Full Time Jobs
+
+```{r}
+# spam <- computeSpam()
+fulltime_percent <- df %>% 
+        count(job_type) %>% 
+        summarise(percent = n / sum(n)) %>% as.double()
+
+gauge(fulltime_percent * 100, min = 0, max = 1, gaugeSectors(
+  success = c(0, .49), warning = c(0.5, 0.79), danger = c(0.8, 1)
+))
+```
+
+Row 
+-----------------------------------------------------------------------
+  
+### CHART 1
+    
+```{r}
+df %>%
+        unnest_tokens(word, description) %>% 
+        anti_join(stop_words) %>%
+        count(word, sort = TRUE) %>%
+        mutate(word = fct_reorder(word, n)) %>%
+        filter(!is.na(word)) %>%
+        head(20) %>%
+        ggplot(aes(word, n, fill = word)) +
+        geom_col(show.legend = FALSE) +
+        coord_flip() +
+        labs(y = "count",
+             x = "word",
+             title = "1. Most Common Words in All Industries Industry")
+
+```
+
+### CHART 2
+    
+```{r}
+# b_grams <- 
+df %>% head()
+
+```
+
+Column 
+-----------------------------------------------------------------------
+   
+### DATASET
+
+```{r}
+
+DT::datatable(df, options = list(pageLength = 10))
+
+```   
+
+
+ 
